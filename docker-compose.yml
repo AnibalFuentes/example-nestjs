@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    container_name: nestdb-postgres
+    environment:
+      POSTGRES_USER: anibal
+      POSTGRES_PASSWORD: Anibal_1
+      POSTGRES_DB: nestdb
+    ports:
+      - "5432:5432"
+    

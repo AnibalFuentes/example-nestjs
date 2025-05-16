@@ -1,19 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PrismaService } from 'src/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  private users: any[] = [];
+  constructor(private prisma: PrismaService) {}
 
   getAllUsers() {
-    return this.users;
+    return this.prisma.user.findMany({ orderBy: { name: 'asc' } });
+  }
+
+  getUserById(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   createUser(user: CreateUserDto) {
-    this.users.push(user);
-    return {
-      ...user,
-      id: this.users.length + 1,
-    };
+    return this.prisma.user.create({ data: user });
+  }
+  updateUser(id: number, user: Partial<UpdateUserDto>) {
+    // Solo actualiza los campos que se pasen en el body
+    return this.prisma.user.update({
+      where: { id },
+      data: { ...user },
+    });
   }
 }
